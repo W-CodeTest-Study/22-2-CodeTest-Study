@@ -4,51 +4,31 @@ const [N, data] = fs.readFileSync('/dev/stdin').toString().trim().split('\n');
 
 const nums = data.split(' ').map((v) => +v);
 
-const reversedNums = [...nums].reverse();
+const inc = new Array(+N);
+const dec = new Array(+N);
 
-const findLargeNum = (array, idx) => {
-    let max = array[0];
-    let ret = 0;
-    if (max === array[idx]) {
-        return -1;
+// 증가 DP 구하기
+for (let i = 0; i < N; i++) {
+    const cur = nums[i];
+    let cnt = 1;
+    for (let j = 0; j < i; j++) {
+        const compare = nums[j];
+        if (cur > compare) cnt = Math.max(cnt, inc[j] + 1);
     }
-    for (let i = 0; i < idx; i++) {
-        if (max <= array[i] && array[i] < array[idx]) {
-            max = array[i];
-            ret = i;
-        }
-    }
-
-    return ret;
+    inc[i] = cnt;
 }
 
-const getLIS = (array, idx) => {
-    if (!idx) {
-        return 1;
+// 감소 DP 구하기
+for (let i = N - 1; i >= 0; i--) {
+    const cur = nums[i];
+    let cnt = 1;
+    for (let j = i + 1; j < N; j++) {
+        const compare = nums[j];
+        if (cur > compare) cnt = Math.max(cnt, dec[j] + 1);
     }
-    const lastLargeIdx = findLargeNum(array, idx);
-
-    if (lastLargeIdx === -1) {
-        return 1;
-    }
-
-    return getLIS(array, lastLargeIdx) + 1;
+    dec[i] = cnt;
 }
 
-// 각 위치별로, 증가하는 수열, 감소하는 수열을 만들어 보자
+const result = inc.map((v, i) => v + dec[i] - 1);
 
-let inc = Array(+N);
-let dec = Array(+N);
-
-for (let i = 0; i < +N; i++) {
-    inc[i] = getLIS(nums, i);
-    dec[i] = getLIS(reversedNums, i);
-}
-
-dec.reverse();
-
-const result = inc.map((v, i) => {
-    return v + dec[i] - 1;
-}).sort((a, b) => b - a);
-
-console.log(result[0]);
+console.log(Math.max(...result));
