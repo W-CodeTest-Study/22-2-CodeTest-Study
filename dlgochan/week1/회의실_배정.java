@@ -1,8 +1,8 @@
 package dlgochan.week1;
 
-import java.util.Scanner;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Scanner;
 
 /**
  * 회의실_배정
@@ -27,20 +27,15 @@ public class 회의실_배정 {
         }
 
         // 끝나는 시간을 기준으로 정렬하기 위해 compare 재정의
-        Arrays.sort(time, new Comparator<int[]>() {
+        Arrays.sort(time, (o1, o2) -> {
 
-            @Override
-            public int compare(int[] o1, int[] o2) {
-
-                // 종료시간이 같을 경우 시작시간이 빠른순(작은순)으로 정렬해야한다.
-                if (o1[1] == o2[1]) {
-                    return o1[0] - o2[0]; // if o1 is bigger(return value is over 0), then switch. so this operation
-                                          // switch v1 and v2 when return value is over 0
-                }
-
-                return o1[1] - o2[1];
+            // 종료시간이 같을 경우 시작시간이 빠른순(작은순)으로 정렬해야한다.
+            if (o1[1] == o2[1]) {
+                return o1[0] - o2[0]; // if o1 is bigger(return value is over 0), then switch. so this operation
+                // switch v1 and v2 when return value is over 0
             }
 
+            return o1[1] - o2[1];
         });
 
         int count = 0;
