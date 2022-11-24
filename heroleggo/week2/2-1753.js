@@ -10,13 +10,35 @@ const [info, start, ...data] = `5 6
 3 4 6`.split('\n');
 //const [info, start, ...data] = fs.readFileSync('/dev/stdin').toString().trim().split('\n');
 
+class Heap {
+    data;
+
+    constructor(length) {
+        this.data = Array(length).fill(0);
+        this.len = 0;
+    }
+
+    add = (key, value) => {
+        const node = { key, value };
+        this.data.push(node);
+        this.len += 1;
+    }
+
+    getLeftChildIdx = (parentIdx) => parentIdx * 2 + 1
+
+    getRightChildIdx = (parentIdx) => parentIdx * 2 + 2
+
+    getParentidx = (idx) => Math.floor((idx - 1) / 2)
+
+    peek = () => data[0];
+
+}
+
 const [V, E] = info.split(' ').map((v) => +v);
 
 let dijkstra = Array(V).fill(Number.MAX_SAFE_INTEGER);
 
 const map = new Map();
-
-let cnt = 0;
 
 dijkstra.forEach((_, i) => {
     map.set(i + 1, []);
@@ -33,7 +55,6 @@ const queue = [];
 queue.push(+start);
 
 while (queue.length) {
-    cnt++;
     let tmp = queue.shift();
 
     const nodes = map.get(tmp);
@@ -43,7 +64,5 @@ while (queue.length) {
         queue.push(end);
     })
 }
-
-console.log('count', cnt);
 
 console.log(dijkstra.map((i) => i === Number.MAX_SAFE_INTEGER ? 'INF' : i).join('\n'));
